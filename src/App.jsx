@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const CLIENT_ID = "d6398aae662347e2b1854d7985ba6eb4"
-  const REDIRECT_URI = "https://182.8.178.92:5173/callback"
+  const REDIRECT_URI = "https://wraptify.netlify.app/callback"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
