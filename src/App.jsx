@@ -21,6 +21,20 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+  if (!token) return
+
+  fetch("https://api.spotify.com/v1/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("User Profile:", data)
+      setUser(data)
+    })
+    .catch((err) => console.error(err))
+  }, [token])
+
   const logout = () => {
     setToken("")
     window.localStorage.removeItem("token")
@@ -64,15 +78,20 @@ function App() {
             <ul className="list bg-base-100 shadow-md">
               <div className='flex justify-between'>
                 {/* Username */}
-                <div className='flex p-4 items-center'>
-                  <div className="avatar">
-                    <div className="size-8 rounded-full ring-1 ring-base-content/60">
-                      <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
-                    </div>
-                  </div>
-                  <li className="pl-2 pt-2 pb-2 text-sm opacity-60 tracking-wide">Piyoo</li>
-                </div>
-                <div className='p-6 text-xl'>Wraptify</div>
+      {token && user ? (
+        <div className="flex flex-col items-center mt-4">
+          <img
+            src={user.images?.[0]?.url || "https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"}
+            alt="User Avatar"
+            className="rounded-full size-16 ring-2 ring-primary"
+          />
+          <h2 className="font-semibold mt-2 text-lg">{user.display_name}</h2>
+          <p className="text-sm opacity-60">@{user.id}</p>
+        </div>
+      ) : (
+        <div className="text-center opacity-60 mt-4">Please log in to continue.</div>
+      )}
+                <div className='p-6 text-xl uppercase font-semibold tracking-wide'>Wrap<span className='text-primary'>tify</span></div>
                 <div className='p-6 opacity-60'>Oct 2025</div>
               </div>
               <div className='px-4 font-bold text-2xl'>My Top 10 Songs</div>
