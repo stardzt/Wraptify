@@ -2,10 +2,18 @@ import { useEffect, useState } from 'react'
 import { redirectToSpotifyAuth, getAccessToken } from "./SpotifyAuth"
 import './App.css'
 
+function msToTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`
+}
+
 function App() {
   const [token, setToken] = useState("")
   const [user, setUser] = useState(null)
-  
+  const [tracks, setTracks] = useState([])
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
     const urlParams = new URLSearchParams(window.location.search)
@@ -22,9 +30,9 @@ function App() {
     }
   }, [])
 
+  // Fetch username and profile picture
   useEffect(() => {
   if (!token) return
-
   fetch("https://api.spotify.com/v1/me", {
     headers: { Authorization: `Bearer ${token}` },
   })
@@ -36,6 +44,28 @@ function App() {
     .catch((err) => console.error(err))
   }, [token])
 
+  // fetch top tracks when token is present
+  useEffect(() => {
+    if (!token) return
+    fetch("https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch top tracks")
+        return r.json()
+      })
+      .then((data) => setTracks(data.items || []))
+      .catch((err) => {
+        console.error(err)
+        // optional: if 401, remove token to force re-login
+        if (err.message.includes("401")) {
+          localStorage.removeItem("token")
+          setToken("")
+        }
+      })
+  }, [token])
+
+  // Log out
   const logout = () => {
     setToken("")
     window.localStorage.removeItem("token")
@@ -92,37 +122,18 @@ function App() {
                     <div className='p-6 opacity-60'>Oct 2025</div>
                   </div>
                   <div className='px-4 font-bold text-2xl'>My Top 10 Songs</div>
-                  <li className="list-row">
-                    <div className="text-4xl font-thin opacity-30 tabular-nums">01</div>
-                    <div><img className="size-10 rounded-sm" src="https://img.daisyui.com/images/profile/demo/1@94.webp"/></div>
-                    <div className="list-col-grow">
-                      <div>Heartache</div>
-                      <div className="text-xs uppercase font-semibold opacity-60">ONE OK ROCK</div>
-                    </div>
-                    <div>3:14</div>
-                  </li>
-                  <li className="list-row">
-                    <div className="text-4xl font-thin opacity-30 tabular-nums">02</div>
-                    <div><img className="size-10 rounded-sm" src="https://img.daisyui.com/images/profile/demo/4@94.webp"/></div>
-                    <div className="list-col-grow">
-                      <div>Innocence</div>
-                      <div className="text-xs uppercase font-semibold opacity-60">Avril Lavigne</div>
-                    </div>
-                    <button className="btn btn-square btn-ghost">
-                      <svg className="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M6 3L20 12 6 21 6 3z"></path></g></svg>
-                    </button>
-                  </li>
-                  <li className="list-row">
-                    <div className="text-4xl font-thin opacity-30 tabular-nums">03</div>
-                    <div><img className="size-10 rounded-sm" src="https://img.daisyui.com/images/profile/demo/3@94.webp"/></div>
-                    <div className="list-col-grow">
-                      <div>Sabrino Gardener</div>
-                      <div className="text-xs uppercase font-semibold opacity-60">Cappuccino</div>
-                    </div>
-                    <button className="btn btn-square btn-ghost">
-                      <svg className="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor"><path d="M6 3L20 12 6 21 6 3z"></path></g></svg>
-                    </button>
-                  </li>
+                  {tracks.length === 0 && token && <li className="opacity-60">Loading...</li>}
+                  {tracks.map((track, i) => (
+                    <li className="list-row">
+                      <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i + 1).padStart(2, "0")}</div>
+                      <div><img className="size-10 rounded-sm" src={track.album.images?.[2]?.url || track.album.images?.[0]?.url}/></div>
+                      <div className="list-col-grow">
+                        <div>{track.name}</div>
+                        <div className="text-xs uppercase font-semibold opacity-60">{track.artists.map(a => a.name).join(", ")}</div>
+                      </div>
+                      <div>{msToTime(track.duration_ms)}</div>
+                    </li>
+                  ))}
                 </ul>
               </div>
           </div>
