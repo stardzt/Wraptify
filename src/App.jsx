@@ -1,27 +1,24 @@
 import { useEffect, useState } from 'react'
+import { redirectToSpotifyAuth, getAccessToken } from "./SpotifyAuth"
 import './App.css'
 
 function App() {
-  const CLIENT_ID = "d6398aae662347e2b1854d7985ba6eb4"
-  const REDIRECT_URI = "https://wraptify.netlify.app/"
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
-  const RESPONSE_TYPE = "token"
-
   const [token, setToken] = useState("")
 
   useEffect(() => {
-    const hash = window.location.hash
-    let token = window.localStorage.getItem("token")
+    const storedToken = localStorage.getItem("token")
+    const urlParams = new URLSearchParams(window.location.search)
+    const code = urlParams.get("code")
 
-    if (!token && hash) {
-        token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
-
-        window.location.hash = ""
-        window.localStorage.setItem("token", token)
+    // If user just came back from Spotify auth
+    if (!storedToken && code) {
+      getAccessToken(code).then((accessToken) => {
+        setToken(accessToken)
+        window.history.replaceState({}, document.title, "/") // Clean URL
+      })
+    } else if (storedToken) {
+      setToken(storedToken)
     }
-
-    setToken(token)
-
   }, [])
 
   const logout = () => {
@@ -39,7 +36,7 @@ function App() {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
             {!token ?
-            <li><a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}><button class="btn btn-primary">Log in with Spotify</button></a></li>
+            <li><button onClick={redirectToSpotifyAuth} class="btn btn-primary">Log in with Spotify</button></li>
             : <li><button onClick={logout} class="btn btn-outline btn-primary">Log out</button></li>
             }
             <li>
