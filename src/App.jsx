@@ -4,7 +4,8 @@ import './App.css'
 
 function App() {
   const [token, setToken] = useState("")
-
+  const [user, setUser] = useState(null)
+  
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
     const urlParams = new URLSearchParams(window.location.search)
@@ -50,7 +51,7 @@ function App() {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
             {!token ?
-            <li><button onClick={redirectToSpotifyAuth} class="btn btn-primary">Log in with Spotify</button></li>
+            <li><button onClick={redirectToSpotifyAuth} className="btn btn-primary">Log in with Spotify</button></li>
             : <li><button onClick={logout} class="btn btn-outline btn-primary">Log out</button></li>
             }
             <li>
@@ -82,7 +83,7 @@ function App() {
                     <div className='flex p-4 items-center'>
                       <div className="avatar">
                         <div className="size-8 rounded-full ring-1 ring-base-content/60">
-                          <img src="{user.images?.[0]?.url}" />
+                          <img src={user.images?.[0]?.url} />
                         </div>
                       </div>
                       <li className="pl-2 pt-2 pb-2 text-sm opacity-60 tracking-wide">{user.display_name}</li>
