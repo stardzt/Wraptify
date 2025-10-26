@@ -84,22 +84,13 @@ function App() {
             <li><button onClick={redirectToSpotifyAuth} className="btn btn-primary">Log in with Spotify</button></li>
             : <li><button onClick={logout} class="btn btn-outline btn-primary">Log out</button></li>
             }
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="bg-base-100 rounded-t-none p-2">
-                  <li><a>Link 1</a></li>
-                  <li><a>Link 2</a></li>
-                </ul>
-              </details>
-            </li>
           </ul>
         </div>
       </div>
 
       <div className='py-16'>
         <h1 className='flex items-center justify-center uppercase tracking-wide font-bold px-16'>Wrap<span className='text-primary'>tify</span></h1>
-        <div className='flex items-center justify-center px-16 tracking-wide font-semibold'>Track your monthly most played songs.</div>
+        <div className='flex items-center justify-center px-16 tracking-wide font-semibold'>Track your last 30 days most played songs and artists.</div>
       </div>
           
       {token && user && (
@@ -128,8 +119,8 @@ function App() {
                       <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i + 1).padStart(2, "0")}</div>
                       <div><img className="size-10 rounded-sm" src={track.album.images?.[2]?.url || track.album.images?.[0]?.url}/></div>
                       <div className="list-col-grow">
-                        <div>{track.name}</div>
-                        <div className="text-xs uppercase font-semibold opacity-60">{track.artists.map(a => a.name).join(", ")}</div>
+                        <div className='font-semibold'>{track.name}</div>
+                        <div className="text-xs opacity-60">{track.artists.map(a => a.name).join(", ")}</div>
                       </div>
                       <div>{msToTime(track.duration_ms)}</div>
                     </li>
@@ -148,7 +139,7 @@ function App() {
                 <input type="radio" name="radio-1" className="radio" /><div>Top Artists</div>
               </div>
             </div>
-            <button className="btn btn-primary w-full">Download</button>
+            <button className="btn btn-primary w-full">Save as Image</button>
           </div>
         </div>
       )}
