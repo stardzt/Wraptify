@@ -130,7 +130,7 @@ function App() {
                       <li className="pl-2 pt-2 pb-2 text-sm opacity-60 tracking-wide">{user.display_name}</li>
                     </div>
                     <div className='p-6 text-xl uppercase font-semibold tracking-wide'>Wrap<span className='text-primary'>tify</span></div>
-                    <div className='p-6 opacity-60'>Oct 2025</div>
+                    <div className='flex items-center p-6 opacity-60'><div>Last 30 days</div></div>
                   </div>
                   <div className='px-4 font-bold text-2xl'>My Top 10 Songs</div>
                   {tracks.length === 0 && token && <li className="opacity-60">Loading...</li>}
