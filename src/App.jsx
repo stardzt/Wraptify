@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef} from 'react'
 import { redirectToSpotifyAuth, getAccessToken } from "./SpotifyAuth"
 import html2canvas from 'html2canvas-pro';
 import './App.css'
@@ -91,7 +91,7 @@ function App() {
           <ul className="menu menu-horizontal px-1">
             {!token ?
             <li><button onClick={redirectToSpotifyAuth} className="btn btn-primary">Log in with Spotify</button></li>
-            : <li><button onClick={logout} class="btn btn-outline btn-primary">Log out</button></li>
+            : <li><button onClick={logout} className="btn btn-outline btn-primary">Log out</button></li>
             }
           </ul>
         </div>
