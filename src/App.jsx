@@ -117,8 +117,8 @@ function App() {
         <div className="md:flex justify-center min-h-screen">
           <div className="sm:flex justify-center max-w-4xl">
             {/* Card */}
-              <div ref={captureRef} className='sm:w-lg p-4'>
-                <ul className="list bg-base-100 shadow-md">
+              <div className='sm:w-lg p-4'>
+                <ul ref={captureRef} className="list bg-base-100 shadow-md">
                   <div className='flex justify-between'>
                     {/* Username */}
                     <div className='flex p-4 items-center'>
