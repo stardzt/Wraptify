@@ -156,7 +156,7 @@ function App() {
                 <input type="radio" name="radio-1" className="radio" defaultChecked /><div>Top Tracks</div>
               </div>
               <div className='flex gap-2'>
-                <input type="radio" name="radio-1" className="radio disabled" /><div>Top Artists</div>
+                <input type="radio" name="radio-1" className="radio" disabled /><div>Top Artists</div>
               </div>
             </div>
             <button onClick={handleDownload} className="btn btn-primary w-full">Save as Image</button>
