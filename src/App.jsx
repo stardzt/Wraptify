@@ -113,7 +113,16 @@ function App() {
                     <div className='p-6 opacity-60'>Oct 2025</div>
                   </div>
                   <div className='px-4 font-bold text-2xl'>My Top 10 Songs</div>
-                  {tracks.length === 0 && token && <li className="opacity-60">Loading...</li>}
+                  {tracks.length === 0 && token && 
+                    <li className="list-row">
+                      <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i + 1).padStart(2, "0")}</div>
+                      <div className='skeleton h-10 w-10 rounded-sm'></div>
+                      <div className="list-col-grow">
+                        <div class="skeleton h-4 w-full"></div>
+                        <div class="skeleton h-4 w-full"></div>
+                      </div>
+                    </li>
+                    }
                   {tracks.map((track, i) => (
                     <li className="list-row">
                       <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i + 1).padStart(2, "0")}</div>
