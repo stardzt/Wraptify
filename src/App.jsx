@@ -118,8 +118,8 @@ function App() {
                       <div className="text-4xl font-thin opacity-30 tabular-nums">{String(i + 1).padStart(2, "0")}</div>
                       <div className='skeleton h-10 w-10 rounded-sm'></div>
                       <div className="list-col-grow">
-                        <div class="skeleton h-4 w-full"></div>
-                        <div class="skeleton h-4 w-full"></div>
+                        <div className="skeleton h-4 w-full"></div>
+                        <div className="skeleton h-4 w-full"></div>
                       </div>
                     </li>
                     }
