@@ -110,7 +110,7 @@ function App() {
 
       <div className='py-16'>
         <h1 className='flex items-center justify-center uppercase tracking-wide font-bold px-16'>Wrap<span className='text-primary'>tify</span></h1>
-        <div className='flex items-center justify-center px-16 tracking-wide font-semibold'>Track your last 30 days most played songs and artists.</div>
+        <div className='flex items-center justify-center px-16 tracking-wide font-semibold'>Track your most played songs and artists.</div>
       </div>
           
       {token && user && (
@@ -156,7 +156,7 @@ function App() {
                 <input type="radio" name="radio-1" className="radio" defaultChecked /><div>Top Tracks</div>
               </div>
               <div className='flex gap-2'>
-                <input type="radio" name="radio-1" className="radio" /><div>Top Artists</div>
+                <input type="radio" name="radio-1" className="radio disabled" /><div>Top Artists</div>
               </div>
             </div>
             <button onClick={handleDownload} className="btn btn-primary w-full">Save as Image</button>
