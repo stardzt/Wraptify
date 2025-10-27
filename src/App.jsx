@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef} from 'react'
+import { useEffect, useState, useRef } from "react"
+import html2canvas from "html2canvas-pro"
 import { redirectToSpotifyAuth, getAccessToken } from "./SpotifyAuth"
-import html2canvas from 'html2canvas-pro';
 import './App.css'
 
 function msToTime(ms) {
@@ -10,16 +10,11 @@ function msToTime(ms) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`
 }
 
-const printDocument = (domElement) => {
-  html2canvas(domElement).then(canvas => {
-    document.body.appendChild(canvas);
-  });
-};
-
 function App() {
   const [token, setToken] = useState("")
   const [user, setUser] = useState(null)
   const [tracks, setTracks] = useState([])
+  const captureRef = useRef(null)
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
@@ -77,8 +72,24 @@ function App() {
     setToken("")
     window.localStorage.removeItem("token")
   }
+  
+  const handleDownload = async () => {
+    if (!captureRef.current) return
+    const node = captureRef.current
 
-  const canvasRef = useRef()
+    try {
+      const canvas = await html2canvas(node, {
+        useCORS: true, // allow images from Spotify
+        scale: 2,      // better resolution
+      })
+      const link = document.createElement("a")
+      link.href = canvas.toDataURL("image/png")
+      link.download = "my-top-10-songs.png"
+      link.click()
+    } catch (err) {
+      console.error("Capture failed:", err)
+    }
+  }
 
   return (
     <>
@@ -106,7 +117,7 @@ function App() {
         <div className="md:flex justify-center min-h-screen">
           <div className="sm:flex justify-center max-w-4xl">
             {/* Card */}
-              <div ref={canvasRef} className='sm:w-lg p-4'>
+              <div ref={captureRef} className='sm:w-lg p-4'>
                 <ul className="list bg-base-100 shadow-md">
                   <div className='flex justify-between'>
                     {/* Username */}
@@ -134,7 +145,6 @@ function App() {
                       <div>{msToTime(track.duration_ms)}</div>
                     </li>
                   ))}
-
                 </ul>
               </div>
           </div>
@@ -149,7 +159,7 @@ function App() {
                 <input type="radio" name="radio-1" className="radio" /><div>Top Artists</div>
               </div>
             </div>
-            <button onClick={()=>printDocument(canvasRef.current)} className="btn btn-primary w-full">Save as Image</button>
+            <button onClick={handleDownload} className="btn btn-primary w-full">Save as Image</button>
           </div>
         </div>
       )}
